@@ -21,7 +21,7 @@ const UserNotJoinTeam = new ResponseError(
 
 class TeamService {
 
-    async create(userId: number) {
+    async create(userId: string) {
         const user = await userService.get(userId);
         const team = await Team.create().save();
         const teamUser = await TeamUser.create({ user, team }).save();
@@ -38,7 +38,7 @@ class TeamService {
         return team;
     }
 
-    async getTeamUser(teamId: number, userId: number) {
+    async getTeamUser(teamId: number, userId: string) {
         const teamUser = await TeamUser.findOneBy({ teamId, userId });
         if (!teamUser) {
             throw UserNotJoinTeam;
@@ -47,7 +47,7 @@ class TeamService {
         return teamUser;
     }
 
-    async invite(userId: number, teamId: number) {
+    async invite(userId: string, teamId: number) {
         const user = await userService.get(userId);
         const team = await this.get(teamId);
 
@@ -65,8 +65,8 @@ class TeamService {
         return TeamUser.create({ user, team }).save();
     }
 
-    async setCollabMoney(userId: number, teamId: number, collabMoney: number) {
-        const teamUser = await this.getTeamUser(userId, teamId);
+    async setCollabMoney(userId: string, teamId: number, collabMoney: number) {
+        const teamUser = await this.getTeamUser(teamId, userId);
 
         teamUser.collabMoney = collabMoney;
         await teamUser.save();

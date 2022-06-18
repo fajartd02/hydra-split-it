@@ -14,7 +14,7 @@ export class TeamUser extends BaseEntity {
     teamId!: number;
 
     @PrimaryColumn({ name: 'user_id' })
-    userId!: number;
+    userId!: string;
 
     @ManyToOne(() => Team)
     @JoinColumn({ name: 'team_id' })
