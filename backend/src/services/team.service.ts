@@ -24,21 +24,27 @@ class TeamService {
     async create(userId: string) {
         const user = await userService.get(userId);
         const team = await Team.create().save();
-        const teamUser = await TeamUser.create({ user, team }).save();
 
-        return { team, teamUser };
+        await TeamUser.create({ user, team }).save();
+
+        return team;
     }
 
-    async get(teamId: number) {
+    async get(userId: string, teamId: number) {
         const team = await Team.findOneBy({ id: teamId });
         if (!team) {
+            throw TeamNotFound;
+        }
+
+        const foundUser = team.users.find((user) => user.id === userId);
+        if (!foundUser) {
             throw TeamNotFound;
         }
 
         return team;
     }
 
-    async getTeamUser(teamId: number, userId: string) {
+    private async getTeamUser(userId: string, teamId: number) {
         const teamUser = await TeamUser.findOneBy({ teamId, userId });
         if (!teamUser) {
             throw UserNotJoinTeam;
@@ -49,11 +55,11 @@ class TeamService {
 
     async invite(userId: string, teamId: number) {
         const user = await userService.get(userId);
-        const team = await this.get(teamId);
+        const team = await this.get(userId, teamId);
 
         let isJoinTeam = true;
         try {
-            await this.getTeamUser(teamId, userId);
+            await this.getTeamUser(userId, teamId);
         } catch (e) {
             isJoinTeam = false;
         }
@@ -62,11 +68,12 @@ class TeamService {
             throw UserAlreadyJoin;
         }
 
-        return TeamUser.create({ user, team }).save();
+        await TeamUser.create({ user, team }).save();
+        return team;
     }
 
     async setCollabMoney(userId: string, teamId: number, collabMoney: number) {
-        const teamUser = await this.getTeamUser(teamId, userId);
+        const teamUser = await this.getTeamUser(userId, teamId);
 
         teamUser.collabMoney = collabMoney;
         await teamUser.save();
