@@ -24,7 +24,7 @@ export class TeamUser extends BaseEntity {
     @JoinColumn({ name: 'user_id' })
     user!: User;
 
-    @Column({ name: 'collab_money' })
+    @Column({ name: 'collab_money', default: 0 })
     collabMoney!: number;
 
     @Column(() => TrackingEmbed, { prefix: false })
