@@ -8,7 +8,6 @@ import logger from '../src/utils/logger.util';
 import { appDataSource } from '../src/database/datasource';
 import { authService } from '../src/services/auth.service';
 import { User } from '../src/database/entities/user.entity';
-import { Todo } from '../src/database/entities/todo.entity';
 import { DateTime } from 'luxon';
 
 // -------------------------------------------------------------------- //
@@ -22,35 +21,21 @@ function randomRange(min: number, max: number) {
 async function insertData() {
     const users: User[] = [
         User.create({
-            fullName: 'John Doe',
-            email: 'john_doe@example.com',
+            id: 'maryjane123',
+            fullName: 'Marry Jane',
             phone: DEFAULT_PHONE,
-            password: await authService.hashPassword('JohnDoe123?')
+            password: await authService.hashPassword('Marryjane123?')
         }),
         User.create({
-            fullName: 'Alvian',
-            email: 'alvian@example.com',
+            id: 'johndoe123',
+            fullName: 'John Doe',
             phone: DEFAULT_PHONE,
-            password: await authService.hashPassword('Alvian123?')
+            password: await authService.hashPassword('JohnDoe123?')
         })
     ];
     await User.save(users);
 
-    const todos: Todo[] = [
-        Todo.create({
-            user: users[randomRange(0, users.length - 1)],
-            content: 'Play VALORANT tonight'
-        }),
-        Todo.create({
-            user: users[randomRange(0, users.length - 1)],
-            content: 'Do android mobile homework',
-            updatedAt: DateTime.utc().minus({ days: 2, hours: 6 }),
-            createdAt: DateTime.utc().minus({ days: 3 })
-        })
-    ];
-    await Todo.save(todos);
-
-    return { users, todos };
+    return { users };
 }
 
 // -------------------------------------------------------------------- //
