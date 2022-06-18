@@ -27,16 +27,28 @@ function hashPassword(password: string) {
 async function insertData() {
     const users: User[] = [
         User.create({
-            id: 'maryjane123',
-            fullName: 'Marry Jane',
-            phone: '08123456788',
-            password: await hashPassword('Marryjane123?')
+            id: 'fajar123',
+            fullName: 'Fajar Hamka',
+            phone: '08123456786',
+            password: await hashPassword('Fajar123?')
         }),
         User.create({
-            id: 'johndoe123',
-            fullName: 'John Doe',
+            id: 'rahmat123',
+            fullName: 'Rahmat Syifana',
+            phone: '08123456787',
+            password: await hashPassword('Rahmat123?')
+        }),
+        User.create({
+            id: 'alvian123',
+            fullName: 'Alvian Daru',
+            phone: '08123456788',
+            password: await hashPassword('Alvian123?')
+        }),
+        User.create({
+            id: 'fabian123',
+            fullName: 'Fabian Habil',
             phone: '08123456789',
-            password: await hashPassword('JohnDoe123?')
+            password: await hashPassword('Fabian123?')
         })
     ];
     await User.save(users);
