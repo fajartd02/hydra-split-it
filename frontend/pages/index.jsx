@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+
 export default function Home() {
-	return <>tes</>;
+	const { name } = useSelector((state) => state.test);
+	return <>asd</>;
 }
