@@ -4,6 +4,8 @@ import { TeamUser } from '../database/entities/teams-users.entity';
 import { ResponseError } from '../utils/api.util';
 import { userService } from './user.service';
 
+import type { TeamUpdateDTO } from '../validations/team.validation';
+
 const TeamNotFound = new ResponseError(
     'Cannot find team',
     StatusCodes.NOT_FOUND
@@ -72,11 +74,13 @@ class TeamService {
         return team;
     }
 
-    async setCollabMoney(userId: string, teamId: number, collabMoney: number) {
+    async update(userId: string, teamId: number, dto: TeamUpdateDTO) {
         const teamUser = await this.getTeamUser(userId, teamId);
 
-        teamUser.collabMoney = collabMoney;
+        Object.assign(teamUser, dto);
         await teamUser.save();
+
+        return this.get(userId, teamId);
     }
 
 }

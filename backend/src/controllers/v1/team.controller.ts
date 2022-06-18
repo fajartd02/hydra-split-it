@@ -5,7 +5,7 @@ import { sendResponse } from '../../utils/api.util';
 import { teamService } from '../../services/team.service';
 import { StatusCodes } from 'http-status-codes';
 import { validate } from '../../utils/validate.util';
-import { teamIdDto } from '../../validations/team.validation';
+import { teamIdDto, updateTeamDto } from '../../validations/team.validation';
 
 import {
     Controller,
@@ -29,7 +29,7 @@ export class TeamController {
 
     @ReqHandler('GET', '/:teamId')
     async get(req: Request, res: Response) {
-        const { teamId } = validate(req, teamIdDto);
+        const { teamId } = validate(req, teamIdDto, 'params');
         const { id: userId } = req.userPayload!;
 
         const team = await teamService.get(userId, teamId);
@@ -43,9 +43,22 @@ export class TeamController {
     @ReqHandler('POST', '/invite/:teamId')
     async invite(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
-        const { teamId } = validate(req, teamIdDto);
+        const { teamId } = validate(req, teamIdDto, 'params');
 
         const team = await teamService.invite(userId, teamId);
+        return sendResponse(res, {
+            message: 'Successfully invited user to team',
+            data: { team }
+        });
+    }
+
+    @ReqHandler('PUT', '/:teamId')
+    async update(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const { teamId } = validate(req, teamIdDto, 'params');
+        const dto = validate(req, updateTeamDto, 'body');
+
+        const team = await teamService.update(userId, teamId, dto);
         return sendResponse(res, {
             message: 'Successfully invited user to team',
             data: { team }
