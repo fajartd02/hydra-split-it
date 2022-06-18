@@ -5,14 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateSize } from "../../../features/pagesize/pagesizeSlice";
 
 const Layout = ({ children }) => {
-	const [fixedHeight, setFixedHeight] = useState(null);
 	const { heightInit, widthInit } = useWindowDimensions();
 	const { width, height } = useSelector((state) => state.pagesize);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(updateSize({ height: heightInit, width: widthInit }));
-	}, [dispatch]);
+	}, []);
 
 	return (
 		<>
@@ -23,13 +22,12 @@ const Layout = ({ children }) => {
 						maxWidth: "600px",
 						minHeight: height,
 						margin: "auto",
-						"@media (max-width:600px)": {
-							width: width,
-						},
 					}}
-					className="d-flex flex-column align-items-center justify-content-between"
+					className="d-flex flex-column"
 				>
-					<main>{children}</main>
+					<div className="pt-4 px-4" style={{ marginBottom: "100px" }}>
+						<main>{children}</main>
+					</div>
 					<Footer />
 				</div>
 			</div>

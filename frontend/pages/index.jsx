@@ -1,6 +1,10 @@
-import { useSelector } from "react-redux";
+import Home from "../components/templates/home";
 
-export default function Home() {
-	const { name } = useSelector((state) => state.test);
-	return <>asd</>;
-}
+const Index = () => {
+	return (
+		<>
+			<Home />
+		</>
+	);
+};
+export default Index;
