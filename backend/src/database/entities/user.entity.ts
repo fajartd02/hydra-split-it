@@ -1,32 +1,25 @@
-import { Todo } from './todo.entity';
 import { TrackingEmbed } from './embedded/tracking.embed';
 
 import {
     Entity, BaseEntity,
-    Column, PrimaryGeneratedColumn,
-    OneToMany,
+    Column,
+    PrimaryColumn,
 } from 'typeorm';
 
 @Entity('users')
 export class User extends BaseEntity {
 
-    @PrimaryGeneratedColumn()
-    id!: number;
-
-    @OneToMany(() => Todo, (todo) => todo.id)
-    todoList!: Todo[];
+    @PrimaryColumn({ length: 64 })
+    id!: string;
 
     @Column({ name: 'full_name', length: 64 })
     fullName!: string;
 
     @Column({ length: 64 })
-    email!: string;
+    password!: string;
 
     @Column({ length: 32 })
     phone!: string;
-
-    @Column({ length: 64 })
-    password!: string;
 
     @Column(() => TrackingEmbed, { prefix: false })
     track!: TrackingEmbed;

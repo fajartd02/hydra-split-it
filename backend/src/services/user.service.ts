@@ -3,7 +3,7 @@ import { Errors } from '../utils/api.util';
 
 class UserService {
 
-    async get(id: number) {
+    async get(id: string) {
         const user = await User.findOneBy({ id });
         if (!user) {
             throw Errors.NO_SESSION;

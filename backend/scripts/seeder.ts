@@ -3,13 +3,14 @@
 
 /* eslint-disable max-len */
 
+import bcrypt from 'bcrypt';
 import logger from '../src/utils/logger.util';
 
 import { appDataSource } from '../src/database/datasource';
-import { authService } from '../src/services/auth.service';
+// import { authService } from '../src/services/auth.service';
 import { User } from '../src/database/entities/user.entity';
-import { Todo } from '../src/database/entities/todo.entity';
 import { DateTime } from 'luxon';
+import config from '../src/configs/config';
 
 // -------------------------------------------------------------------- //
 
@@ -19,38 +20,40 @@ function randomRange(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+function hashPassword(password: string) {
+    return bcrypt.hash(password, config.hashRounds);
+}
+
 async function insertData() {
     const users: User[] = [
         User.create({
-            fullName: 'John Doe',
-            email: 'john_doe@example.com',
-            phone: DEFAULT_PHONE,
-            password: await authService.hashPassword('JohnDoe123?')
+            id: 'fajar123',
+            fullName: 'Fajar Hamka',
+            phone: '08123456786',
+            password: await hashPassword('Fajar123?')
         }),
         User.create({
-            fullName: 'Alvian',
-            email: 'alvian@example.com',
-            phone: DEFAULT_PHONE,
-            password: await authService.hashPassword('Alvian123?')
+            id: 'rahmat123',
+            fullName: 'Rahmat Syifana',
+            phone: '08123456787',
+            password: await hashPassword('Rahmat123?')
+        }),
+        User.create({
+            id: 'alvian123',
+            fullName: 'Alvian Daru',
+            phone: '08123456788',
+            password: await hashPassword('Alvian123?')
+        }),
+        User.create({
+            id: 'fabian123',
+            fullName: 'Fabian Habil',
+            phone: '08123456789',
+            password: await hashPassword('Fabian123?')
         })
     ];
     await User.save(users);
 
-    const todos: Todo[] = [
-        Todo.create({
-            user: users[randomRange(0, users.length - 1)],
-            content: 'Play VALORANT tonight'
-        }),
-        Todo.create({
-            user: users[randomRange(0, users.length - 1)],
-            content: 'Do android mobile homework',
-            updatedAt: DateTime.utc().minus({ days: 2, hours: 6 }),
-            createdAt: DateTime.utc().minus({ days: 3 })
-        })
-    ];
-    await Todo.save(todos);
-
-    return { users, todos };
+    return { users };
 }
 
 // -------------------------------------------------------------------- //
