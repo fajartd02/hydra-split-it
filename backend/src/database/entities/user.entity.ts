@@ -2,8 +2,7 @@ import { TrackingEmbed } from './embedded/tracking.embed';
 
 import {
     Entity, BaseEntity,
-    Column, PrimaryGeneratedColumn,
-    OneToMany,
+    Column,
     PrimaryColumn,
 } from 'typeorm';
 
