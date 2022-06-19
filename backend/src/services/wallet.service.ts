@@ -30,8 +30,7 @@ class WalletService {
         const list = await UserWallet.find({
             where: { userId },
             order: { priority: 'ASC' }
-        }
-        );
+        });
 
         let priority = 1;
         if (list.length) {
@@ -46,8 +45,8 @@ class WalletService {
         const userWallet = await UserWallet.create({
             userId,
             walletId,
-            balance: dto.balance,
-            priority
+            priority,
+            ...dto
         }).save();
 
         return userWallet;
