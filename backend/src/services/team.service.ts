@@ -33,16 +33,12 @@ class TeamService {
     }
 
     async get(userId: string, teamId: number) {
-        const team = await Team.findOne({ where: { id: teamId }, relations: {
-            teamUsers: {
-                user: true
-            }
-        } });
+        const teamUsers = await TeamUser.find({
+            where: { teamId, userId },
+            relations: { user: true }
+        });
 
-        const teamUsers = await TeamUser.find({ where: { teamId },
-            relations: { user: true } });
-
-        if (!team) {
+        if (!teamUsers) {
             throw TeamNotFound;
         }
 
@@ -51,6 +47,7 @@ class TeamService {
             throw TeamNotFound;
         }
 
+        const team = await Team.findOneBy({ id: teamId });
         return team;
     }
 
@@ -64,9 +61,6 @@ class TeamService {
     }
 
     async invite(userId: string, teamId: number) {
-        const user = await userService.get(userId);
-        const team = await this.get(userId, teamId);
-
         let isJoinTeam = true;
         try {
             await this.getTeamUser(userId, teamId);
@@ -78,8 +72,8 @@ class TeamService {
             throw UserAlreadyJoin;
         }
 
-        await TeamUser.create({ user, team }).save();
-        return team;
+        await TeamUser.create({ userId, teamId }).save();
+        return Team.findOneBy({ id: teamId });
     }
 
     async update(userId: string, teamId: number, dto: TeamUpdateDTO) {
