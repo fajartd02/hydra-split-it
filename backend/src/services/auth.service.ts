@@ -70,7 +70,7 @@ class AuthService {
         return bcrypt.hash(password, config.hashRounds);
     }
 
-    private async generateToken(
+    async generateToken(
         user: User | UserPayload,
         tokenType: TokenType) {
 

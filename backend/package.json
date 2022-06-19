@@ -19,7 +19,8 @@
         "migration:create": "cross-env NODE_ENV=development ts-node ./scripts/migrations.ts CREATE",
         "migration:run": "cross-env NODE_ENV=development ts-node ./scripts/migrations.ts RUN",
         "migration:revert": "cross-env NODE_ENV=development ts-node ./scripts/migrations.ts REVERT",
-        "migration:show": "cross-env NODE_ENV=development ts-node ./scripts/migrations.ts SHOW"
+        "migration:show": "cross-env NODE_ENV=development ts-node ./scripts/migrations.ts SHOW",
+        "gentoken": "cross-env NODE_ENV=development ts-node ./scripts/gen-token.ts"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",
