@@ -27,7 +27,7 @@ const passwordSchema = joi.string()
     .rule({ message: '{#label} requires at least a special character' });
 
 export interface LoginType {
-    email: string;
+    id: string;
     password: string;
 }
 
@@ -37,9 +37,8 @@ export interface RegisterType extends LoginType {
 }
 
 export const loginSchema = joi.object<LoginType>({
-    email: joi.string()
+    id: joi.string()
         .max(64)
-        .email()
         .required(),
 
     password: joi.string()
@@ -49,9 +48,8 @@ export const loginSchema = joi.object<LoginType>({
 });
 
 export const registerSchema = joi.object<RegisterType>({
-    email: joi.string()
+    id: joi.string()
         .max(64)
-        .email()
         .required(),
 
     password: passwordSchema.required(),

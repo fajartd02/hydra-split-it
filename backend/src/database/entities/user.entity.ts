@@ -1,9 +1,12 @@
+import { UserWallet } from './user-wallet.entity';
 import { TrackingEmbed } from './embedded/tracking.embed';
+import { TeamUser } from './teams-users.entity';
 
 import {
     Entity, BaseEntity,
     Column,
     PrimaryColumn,
+    OneToMany,
 } from 'typeorm';
 
 @Entity('users')
@@ -23,6 +26,12 @@ export class User extends BaseEntity {
 
     @Column(() => TrackingEmbed, { prefix: false })
     track!: TrackingEmbed;
+
+    @OneToMany(() => UserWallet, (uw) => uw.user)
+    usersWallets!: UserWallet[];
+
+    @OneToMany(() => TeamUser, (tu) => tu.user)
+    teamsUsers!: TeamUser[];
 
     toJSON() {
         const cloned = { ...this } as Record<string, unknown>;

@@ -5,20 +5,14 @@
 
 import bcrypt from 'bcrypt';
 import logger from '../src/utils/logger.util';
-
-import { appDataSource } from '../src/database/datasource';
-// import { authService } from '../src/services/auth.service';
-import { User } from '../src/database/entities/user.entity';
-import { DateTime } from 'luxon';
 import config from '../src/configs/config';
 
-// -------------------------------------------------------------------- //
-
-const DEFAULT_PHONE = '628174991828';
-
-function randomRange(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
+import { appDataSource } from '../src/database/datasource';
+import { User } from '../src/database/entities/user.entity';
+import { Team } from '../src/database/entities/team.entity';
+import { TeamUser } from '../src/database/entities/teams-users.entity';
+import { Wallet } from '../src/database/entities/wallet.entity';
+import { UserWallet } from '../src/database/entities/user-wallet.entity';
 
 function hashPassword(password: string) {
     return bcrypt.hash(password, config.hashRounds);
@@ -43,17 +37,67 @@ async function insertData() {
             fullName: 'Alvian Daru',
             phone: '08123456788',
             password: await hashPassword('Alvian123?')
-        }),
-        User.create({
-            id: 'fabian123',
-            fullName: 'Fabian Habil',
-            phone: '08123456789',
-            password: await hashPassword('Fabian123?')
         })
     ];
+    const wallets: Wallet[] = [
+        Wallet.create({ name: 'GoPay' }),
+        Wallet.create({ name: 'OVO' }),
+        Wallet.create({ name: 'KlikBCA Internet Banking' }),
+    ];
+    const team = await Team.create().save();
+
+    await Wallet.save(wallets);
     await User.save(users);
 
-    return { users };
+    const teamUsers: TeamUser[] = [];
+    for (const user of users) {
+        teamUsers.push(TeamUser.create({ team, user }));
+    }
+    await TeamUser.save(teamUsers);
+
+    const usersWallets: UserWallet[] = [
+        UserWallet.create({
+            user: users[0],
+            wallet: wallets[0],
+            priority: 1,
+            balance: 5_000
+        }),
+        UserWallet.create({
+            user: users[0],
+            wallet: wallets[1],
+            priority: 2,
+            balance: 1_000_000
+        }),
+
+        UserWallet.create({
+            user: users[1],
+            wallet: wallets[2],
+            priority: 1,
+            balance: 200_000
+        }),
+
+        UserWallet.create({
+            user: users[2],
+            wallet: wallets[0],
+            priority: 1,
+            balance: 100_000
+        }),
+
+        UserWallet.create({
+            user: users[3],
+            wallet: wallets[1],
+            priority: 1,
+            balance: 30_000
+        }),
+        UserWallet.create({
+            user: users[3],
+            wallet: wallets[2],
+            priority: 1,
+            balance: 540_000
+        })
+    ];
+
+    await UserWallet.save(usersWallets);
 }
 
 // -------------------------------------------------------------------- //
