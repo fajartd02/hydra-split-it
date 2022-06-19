@@ -82,18 +82,11 @@ async function insertData() {
             priority: 1,
             balance: 100_000
         }),
-
         UserWallet.create({
-            user: users[3],
+            user: users[2],
             wallet: wallets[1],
-            priority: 1,
+            priority: 2,
             balance: 30_000
-        }),
-        UserWallet.create({
-            user: users[3],
-            wallet: wallets[2],
-            priority: 1,
-            balance: 540_000
         })
     ];
 
