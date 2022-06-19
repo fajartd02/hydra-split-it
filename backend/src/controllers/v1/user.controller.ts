@@ -25,7 +25,7 @@ export class UserController {
         });
     }
 
-    @ReqHandler('GET', '/pay')
+    @ReqHandler('POST', '/pay')
     async sendPayment(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const dto = validate(req, soloPaySchema, 'body');
