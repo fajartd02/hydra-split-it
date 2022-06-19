@@ -12,6 +12,8 @@ import { User } from '../src/database/entities/user.entity';
 import { Team } from '../src/database/entities/team.entity';
 
 import { TeamUser } from '../src/database/entities/teams-users.entity';
+import { Wallet } from '../src/database/entities/wallet.entity';
+import { UserWallet } from '../src/database/entities/user-wallet.entity';
 
 // -------------------------------------------------------------------- //
 
@@ -46,9 +48,15 @@ async function insertData() {
             password: await hashPassword('Fabian123?')
         })
     ];
-
-    await User.save(users);
+    const wallets: Wallet[] = [
+        Wallet.create({ name: 'GoPay' }),
+        Wallet.create({ name: 'OVO' }),
+        Wallet.create({ name: 'KlikBCA Internet Banking' }),
+    ];
     const team = await Team.create().save();
+
+    await Wallet.save(wallets);
+    await User.save(users);
 
     const teamUsers: TeamUser[] = [];
     for (const user of users) {
@@ -56,7 +64,49 @@ async function insertData() {
     }
     await TeamUser.save(teamUsers);
 
-    return { users, team, teamUsers };
+    const usersWallets: UserWallet[] = [
+        UserWallet.create({
+            user: users[0],
+            wallet: wallets[0],
+            priority: 1,
+            balance: 5_000
+        }),
+        UserWallet.create({
+            user: users[0],
+            wallet: wallets[1],
+            priority: 2,
+            balance: 1_000_000
+        }),
+
+        UserWallet.create({
+            user: users[1],
+            wallet: wallets[2],
+            priority: 1,
+            balance: 200_000
+        }),
+
+        UserWallet.create({
+            user: users[2],
+            wallet: wallets[0],
+            priority: 1,
+            balance: 100_000
+        }),
+
+        UserWallet.create({
+            user: users[3],
+            wallet: wallets[1],
+            priority: 1,
+            balance: 30_000
+        }),
+        UserWallet.create({
+            user: users[3],
+            wallet: wallets[2],
+            priority: 1,
+            balance: 540_000
+        })
+    ];
+
+    await UserWallet.save(usersWallets);
 }
 
 // -------------------------------------------------------------------- //
