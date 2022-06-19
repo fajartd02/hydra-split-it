@@ -27,7 +27,7 @@ export interface PaymentDTO {
 
 export const createWalletSchema = joi.object<CreateWalletDTO>({
     address: joi.string()
-        .min(5)
+        .min(1)
         .max(64)
         .required(),
     balance: joi.number()
@@ -46,7 +46,7 @@ export const updateWalletSchema = joi.object<UpdateWalletDTO>({
 
 export const paySchema = joi.object<PaymentDTO>({
     walletAddress: joi.string()
-        .min(5)
+        .min(1)
         .required(),
     bill: joi.number()
         .min(1_000)
