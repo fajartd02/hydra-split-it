@@ -60,7 +60,7 @@ export class TeamController {
 
         const team = await teamService.update(userId, teamId, dto);
         return sendResponse(res, {
-            message: 'Successfully invited user to team',
+            message: 'Successfully updated team user',
             data: { team }
         });
     }

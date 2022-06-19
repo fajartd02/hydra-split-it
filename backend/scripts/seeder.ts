@@ -46,12 +46,6 @@ async function insertData() {
             fullName: 'Alvian Daru',
             phone: '08123456788',
             password: await hashPassword('Alvian123?')
-        }),
-        User.create({
-            id: 'fabian123',
-            fullName: 'Fabian Habil',
-            phone: '08123456789',
-            password: await hashPassword('Fabian123?')
         })
     ];
 
