@@ -33,12 +33,20 @@ class TeamService {
     }
 
     async get(userId: string, teamId: number) {
-        const team = await Team.findOneBy({ id: teamId });
+        const team = await Team.findOne({ where: { id: teamId }, relations: {
+            teamUsers: {
+                user: true
+            }
+        } });
+
+        const teamUsers = await TeamUser.find({ where: { teamId },
+            relations: { user: true } });
+
         if (!team) {
             throw TeamNotFound;
         }
 
-        const foundUser = team.users.find((user) => user.id === userId);
+        const foundUser = teamUsers.map((tu) => tu.user);
         if (!foundUser) {
             throw TeamNotFound;
         }

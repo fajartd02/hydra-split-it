@@ -10,10 +10,7 @@ import config from '../src/configs/config';
 import { appDataSource } from '../src/database/datasource';
 import { User } from '../src/database/entities/user.entity';
 import { Team } from '../src/database/entities/team.entity';
-
 import { TeamUser } from '../src/database/entities/teams-users.entity';
-
-// -------------------------------------------------------------------- //
 
 function hashPassword(password: string) {
     return bcrypt.hash(password, config.hashRounds);
@@ -38,12 +35,6 @@ async function insertData() {
             fullName: 'Alvian Daru',
             phone: '08123456788',
             password: await hashPassword('Alvian123?')
-        }),
-        User.create({
-            id: 'fabian123',
-            fullName: 'Fabian Habil',
-            phone: '08123456789',
-            password: await hashPassword('Fabian123?')
         })
     ];
 
