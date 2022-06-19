@@ -1,11 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import testReducer from "../features/testSlice";
 import pagesizeReducer from "../features/pagesize/pagesizeSlice";
+import groupReducer from "../features/group/groupSlice";
+import stepperReducer from "../features/stepper/stepperSlice";
+import userReducer from "../features/user/userSlice";
 
 const store = configureStore({
 	reducer: {
-		test: testReducer,
 		pagesize: pagesizeReducer,
+		group: groupReducer,
+		stepperGroup: stepperReducer,
+		user: userReducer,
 	},
 });
 

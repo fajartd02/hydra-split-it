@@ -1,11 +1,11 @@
 import { MdAdd } from "react-icons/md";
 
-const AddInstitute = () => {
+const AddGroup = () => {
 	return (
 		<>
 			<div
 				className="d-flex flex-row justify-content-center align-items-center card-institute"
-				style={{ height: "50px", fontSize: "40px", marginTop: "12px" }}
+				style={{ height: "50px", fontSize: "40px" }}
 			>
 				<MdAdd />
 			</div>
@@ -13,4 +13,4 @@ const AddInstitute = () => {
 	);
 };
 
-export default AddInstitute;
+export default AddGroup;

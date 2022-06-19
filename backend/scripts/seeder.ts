@@ -87,7 +87,6 @@ async function insertData() {
             balance: 100_000,
             address: 'DDD'
         }),
-
         UserWallet.create({
             userId: users[2].id,
             walletId: wallets[1].id,

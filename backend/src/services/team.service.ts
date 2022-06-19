@@ -3,8 +3,11 @@ import { Team } from '../database/entities/team.entity';
 import { TeamUser } from '../database/entities/teams-users.entity';
 import { ResponseError } from '../utils/api.util';
 import { userService } from './user.service';
+import { UserWallet } from '../database/entities/user-wallet.entity';
+import { TeamStatus } from '../validations/team.validation';
 
 import type { TeamUpdateDTO } from '../validations/team.validation';
+import type { PaymentDTO } from '../validations/wallet.validation';
 
 const TeamNotFound = new ResponseError(
     'Cannot find team',
@@ -21,6 +24,16 @@ const UserNotJoinTeam = new ResponseError(
     StatusCodes.BAD_REQUEST
 );
 
+const WalletAddressNotFound = new ResponseError(
+    'Cannot find this wallet address',
+    StatusCodes.NOT_FOUND
+);
+
+const NotEnoughMoney = new ResponseError(
+    "Team doesn't have enough money to pay the bill!",
+    StatusCodes.FORBIDDEN
+);
+
 class TeamService {
 
     async create(userId: string) {
@@ -33,21 +46,19 @@ class TeamService {
     }
 
     async get(userId: string, teamId: number) {
-        const team = await Team.findOne({ where: { id: teamId }, relations: {
-            teamUsers: {
-                user: true
-            }
-        } });
+        const teamUsers = await TeamUser.find({
+            where: { teamId, userId },
+            relations: { user: true }
+        });
 
-        const teamUsers = await TeamUser.find({ where: { teamId },
-            relations: { user: true } });
-
-        if (!team) {
+        if (!teamUsers) {
             throw TeamNotFound;
         }
 
         const foundUser = teamUsers.map((tu) => tu.user);
-        if (!foundUser) {
+        const team = await Team.findOneBy({ id: teamId });
+
+        if (!team || !foundUser) {
             throw TeamNotFound;
         }
 
@@ -64,9 +75,6 @@ class TeamService {
     }
 
     async invite(userId: string, teamId: number) {
-        const user = await userService.get(userId);
-        const team = await this.get(userId, teamId);
-
         let isJoinTeam = true;
         try {
             await this.getTeamUser(userId, teamId);
@@ -78,8 +86,8 @@ class TeamService {
             throw UserAlreadyJoin;
         }
 
-        await TeamUser.create({ user, team }).save();
-        return team;
+        await TeamUser.create({ userId, teamId }).save();
+        return Team.findOneBy({ id: teamId });
     }
 
     async update(userId: string, teamId: number, dto: TeamUpdateDTO) {
@@ -89,6 +97,38 @@ class TeamService {
         await teamUser.save();
 
         return this.get(userId, teamId);
+    }
+
+    async sendPayment(userId: string, teamId: number, dto: PaymentDTO) {
+        const targetWallet = await UserWallet.findOneBy({
+            address: dto.walletAddress
+        });
+
+        if (!targetWallet) {
+            throw WalletAddressNotFound;
+        }
+
+        const members = await TeamUser.findBy({ teamId });
+        const totalMoney = members
+            .map((member) => member.collabMoney)
+            .reduce((prev, curr) => prev + curr, 0);
+
+        if (totalMoney < dto.bill) {
+            throw NotEnoughMoney;
+        }
+
+        const payments: Promise<void>[] = [];
+        for (const member of members) {
+            const res = userService.sendPayment(member.userId, dto);
+            payments.push(res);
+        }
+
+        await Promise.all(payments);
+
+        const team = await this.get(userId, teamId);
+        team.status = TeamStatus.COMPLETE;
+
+        await team.save();
     }
 
 }
