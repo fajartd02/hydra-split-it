@@ -58,10 +58,9 @@ export class TeamController {
         const { teamId } = validate(req, teamIdDto, 'params');
         const dto = validate(req, updateTeamDto, 'body');
 
-        const team = await teamService.update(userId, teamId, dto);
+        await teamService.update(userId, teamId, dto);
         return sendResponse(res, {
-            message: 'Successfully updated team user',
-            data: { team }
+            message: 'Successfully updated team user'
         });
     }
 

@@ -11,17 +11,16 @@ import { appDataSource } from '../src/database/datasource';
 import { User } from '../src/database/entities/user.entity';
 import { Team } from '../src/database/entities/team.entity';
 
-import { DateTime } from 'luxon';
 import config from '../src/configs/config';
 import { TeamUser } from '../src/database/entities/teams-users.entity';
 
 // -------------------------------------------------------------------- //
 
-const DEFAULT_PHONE = '628174991828';
+// // const DEFAULT_PHONE = '628174991828';
 
-function randomRange(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
+// // function randomRange(min: number, max: number) {
+// //     return Math.floor(Math.random() * (max - min + 1) + min);
+// }
 
 function hashPassword(password: string) {
     return bcrypt.hash(password, config.hashRounds);
