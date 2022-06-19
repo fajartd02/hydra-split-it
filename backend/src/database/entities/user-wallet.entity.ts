@@ -6,9 +6,11 @@ import {
     Entity, BaseEntity,
     Column, PrimaryColumn, JoinColumn,
     ManyToOne,
+    Unique,
 } from 'typeorm';
 
 @Entity('users_wallets')
+@Unique(['user_id', 'wallet_id', 'priority'])
 export class UserWallet extends BaseEntity {
 
     @PrimaryColumn({ name: 'user_id' })
