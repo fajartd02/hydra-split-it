@@ -40,18 +40,21 @@ class UserService {
         }
 
         const originalBill = bill;
-        for (const wallet of wallets) {
+        for (const curr of wallets) {
             if (bill <= 0) {
                 break;
             }
 
-            let taken = wallet.balance;
-            if (wallet.balance >= bill) {
-                taken = wallet.balance - bill;
+            let taken;
+            if (curr.balance < bill) {
+                taken = curr.balance;
+                curr.balance = 0;
+            } else {
+                taken = curr.balance - bill;
+                curr.balance = taken;
             }
 
             bill -= taken;
-            wallet.balance = taken;
         }
 
         if (bill > 0) {
@@ -60,8 +63,8 @@ class UserService {
 
         targetWallet.balance += originalBill;
 
-        await targetWallet.save();
         await UserWallet.save(wallets);
+        await targetWallet.save();
     }
 
 }
