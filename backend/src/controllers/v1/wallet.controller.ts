@@ -8,6 +8,7 @@ import {
 } from '../../internals/decorators/express.decorator';
 import {
     createWalletSchema,
+    updateWalletSchema,
     walletIdScehma
 } from '../../validations/wallet.validation';
 import { sendResponse } from '../../utils/api.util';
@@ -25,10 +26,23 @@ export class WalletController {
         const wallet = await walletService.add(userId, walletId, dto);
 
         return sendResponse(res, {
-            message: 'Successfully add wallet',
+            message: 'Successfully added wallet',
             data: {
                 wallet
             }
+        });
+    }
+
+    @ReqHandler('PUT', '/:walletId')
+    async update(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const { walletId } = validate(req, walletIdScehma, 'params');
+        const dto = validate(req, updateWalletSchema, 'body');
+
+        await walletService.update(userId, walletId, dto);
+
+        return sendResponse(res, {
+            message: 'Successfully updated wallet'
         });
     }
 
