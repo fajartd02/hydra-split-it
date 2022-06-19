@@ -39,6 +39,8 @@ async function insertData() {
             password: await hashPassword('Alvian123?')
         })
     ];
+    await User.save(users);
+
     const wallets: Wallet[] = [
         Wallet.create({ name: 'GoPay' }),
         Wallet.create({ name: 'OVO' }),
@@ -47,7 +49,6 @@ async function insertData() {
     const team = await Team.create().save();
 
     await Wallet.save(wallets);
-    await User.save(users);
 
     const teamUsers: TeamUser[] = [];
     for (const user of users) {
@@ -57,37 +58,42 @@ async function insertData() {
 
     const usersWallets: UserWallet[] = [
         UserWallet.create({
-            user: users[0],
-            wallet: wallets[0],
+            userId: users[0].id,
+            walletId: wallets[0].id,
             priority: 1,
-            balance: 5_000
+            balance: 5_000,
+            address: 'AAA'
         }),
         UserWallet.create({
-            user: users[0],
-            wallet: wallets[1],
+            userId: users[0].id,
+            walletId: wallets[1].id,
             priority: 2,
-            balance: 1_000_000
+            balance: 1_000_000,
+            address: 'BBB'
         }),
 
         UserWallet.create({
-            user: users[1],
-            wallet: wallets[2],
+            userId: users[1].id,
+            walletId: wallets[2].id,
             priority: 1,
-            balance: 200_000
+            balance: 200_000,
+            address: 'CC'
         }),
 
         UserWallet.create({
-            user: users[2],
-            wallet: wallets[0],
+            userId: users[2].id,
+            walletId: wallets[0].id,
             priority: 1,
-            balance: 100_000
+            balance: 100_000,
+            address: 'DDD'
         }),
         UserWallet.create({
-            user: users[2],
-            wallet: wallets[1],
+            userId: users[2].id,
+            walletId: wallets[1].id,
             priority: 2,
-            balance: 30_000
-        })
+            balance: 30_000,
+            address: 'EEE'
+        }),
     ];
 
     await UserWallet.save(usersWallets);
