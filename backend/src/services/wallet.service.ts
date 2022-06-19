@@ -108,16 +108,16 @@ class WalletService {
                     }
                 }
 
-                for (let i = currPriority + 1;
-                    i <= targetPriority; i++) {
+                for (let i = pivot + 1; i <= list.length - 1 ; i++) {
                     list[i].priority--;
                 }
+                list[pivot].priority = targetPriority;
             }
 
-
+            console.log(list);
             await userWallet.save();
-            await UserWallet.save(list);
             userWallet.priority = targetPriority;
+            await UserWallet.save(list);
         }
 
         await userWallet.save();
