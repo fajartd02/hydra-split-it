@@ -17,6 +17,10 @@ const WalletAddressNotFound = new ResponseError(
 
 class UserService {
 
+    async getAll() {
+        return User.find();
+    }
+
     async get(id: string) {
         const user = await User.findOneBy({ id });
         if (!user) {

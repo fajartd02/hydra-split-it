@@ -14,6 +14,17 @@ import {
 @Controller({ path: 'users', middlewares: [authenticate()] })
 export class UserController {
 
+    @ReqHandler('GET', '/')
+    async getAll(_: Request, res: Response) {
+        const users = await userService.getAll();
+        return sendResponse(res, {
+            message: 'OK',
+            data: {
+                users
+            }
+        });
+    }
+
     @ReqHandler('GET', '/profile')
     async profile(req: Request, res: Response) {
         const { id } = req.userPayload!;
