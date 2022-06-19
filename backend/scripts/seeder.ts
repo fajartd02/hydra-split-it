@@ -9,8 +9,11 @@ import logger from '../src/utils/logger.util';
 import { appDataSource } from '../src/database/datasource';
 // import { authService } from '../src/services/auth.service';
 import { User } from '../src/database/entities/user.entity';
+import { Team } from '../src/database/entities/team.entity';
+
 import { DateTime } from 'luxon';
 import config from '../src/configs/config';
+import { TeamUser } from '../src/database/entities/teams-users.entity';
 
 // -------------------------------------------------------------------- //
 
@@ -51,9 +54,21 @@ async function insertData() {
             password: await hashPassword('Fabian123?')
         })
     ];
-    await User.save(users);
 
-    return { users };
+    const team: Team = Team.create();
+
+    await Team.save(team);
+
+    const teamUsers: TeamUser[] = [];
+
+    for (const user of users) {
+        teamUsers.push(TeamUser.create({ team, user }));
+    }
+
+    await User.save(users);
+    await TeamUser.save(teamUsers);
+
+    return { users, team, teamUsers };
 }
 
 // -------------------------------------------------------------------- //
