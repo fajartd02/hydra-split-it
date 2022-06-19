@@ -5,22 +5,12 @@
 
 import bcrypt from 'bcrypt';
 import logger from '../src/utils/logger.util';
+import config from '../src/configs/config';
 
 import { appDataSource } from '../src/database/datasource';
-// import { authService } from '../src/services/auth.service';
 import { User } from '../src/database/entities/user.entity';
 import { Team } from '../src/database/entities/team.entity';
-
-import config from '../src/configs/config';
 import { TeamUser } from '../src/database/entities/teams-users.entity';
-
-// -------------------------------------------------------------------- //
-
-// // const DEFAULT_PHONE = '628174991828';
-
-// // function randomRange(min: number, max: number) {
-// //     return Math.floor(Math.random() * (max - min + 1) + min);
-// }
 
 function hashPassword(password: string) {
     return bcrypt.hash(password, config.hashRounds);
@@ -48,17 +38,13 @@ async function insertData() {
         })
     ];
 
-    const team: Team = Team.create();
-
-    await Team.save(team);
+    await User.save(users);
+    const team = await Team.create().save();
 
     const teamUsers: TeamUser[] = [];
-
     for (const user of users) {
         teamUsers.push(TeamUser.create({ team, user }));
     }
-
-    await User.save(users);
     await TeamUser.save(teamUsers);
 
     return { users, team, teamUsers };
