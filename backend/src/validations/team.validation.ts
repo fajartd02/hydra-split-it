@@ -4,6 +4,11 @@ interface TeamId {
     teamId: number;
 }
 
+export enum TeamStatus {
+    ONGOING,
+    COMPLETE
+}
+
 export interface TeamUpdateDTO {
     collabMoney: number;
 }
