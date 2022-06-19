@@ -5,10 +5,10 @@ const InputDestination = (props) => {
 				<div className="d-flex flex-row justify-content-between align-items-center">
 					<div className="d-flex flex-column" style={{ width: "90%", gap: "4px" }}>
 						<p style={{ fontWeight: 700 }}>Masukkan nomor / rekening tujuan</p>
-						<div class="input-group d-flex">
+						<div className="input-group d-flex">
 							<input
 								type="text"
-								class="form-control"
+								className="form-control"
 								aria-label="Sizing example input"
 								aria-describedby="inputGroup-sizing-sm"
 								onChange={(e) => {

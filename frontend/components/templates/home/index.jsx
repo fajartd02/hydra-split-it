@@ -25,14 +25,14 @@ const Home = () => {
 					<>
 						<div className="d-flex flex-row align-items-center" style={{ gap: "20px" }}>
 							<img
-								src="https://cdn.vox-cdn.com/thumbor/b0PmAywJc1nLA9vUkyJo5-jFmBE=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/23633427/GettyImages_1395371342.jpg"
+								src="/fabian.jpg"
 								className="rounded-circle"
 								alt="Avatar"
 								style={{ height: "120px" }}
 							/>
 							<div className="d-flex flex-column" style={{ gap: "5px" }}>
-								<p style={{ fontSize: "24px", fontWeight: "bold" }}>Elon Musk</p>
-								<p style={{ fontSize: "16px" }}>ID: mas_elon</p>
+								<p style={{ fontSize: "24px", fontWeight: "bold" }}>Fabian</p>
+								<p style={{ fontSize: "16px" }}>ID: fabianhabil</p>
 							</div>
 						</div>
 						<div
@@ -40,7 +40,7 @@ const Home = () => {
 							style={{ gap: "10px" }}
 						>
 							<p className="judul-uang">Total Saldo</p>
-							<p className="total-uang">Rp2.700.000</p>
+							<p className="total-uang">Rp6.800.000</p>
 						</div>
 						<div className="d-flex flex-column" style={{ gap: "4px", marginTop: "24px" }}>
 							<p>Prioritas Pembayaran</p>

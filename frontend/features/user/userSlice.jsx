@@ -5,7 +5,7 @@ const initialState = {
 		id: "",
 		name: "",
 	},
-	loggedIn: true,
+	loggedIn: false,
 };
 
 const userSlice = createSlice({

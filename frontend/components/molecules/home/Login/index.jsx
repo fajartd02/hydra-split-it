@@ -1,10 +1,26 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setLoggedIn } from "../../../../features/user/userSlice";
 
 const Login = () => {
 	const [data, setData] = useState({
 		username: "",
 		password: "",
 	});
+
+	const [error, setError] = useState(false);
+	const dispatch = useDispatch();
+
+	const Login = () => {
+		if (data.username == "fabianhabil") {
+			if (data.password == "fabianhabil") {
+				console.log("logged in");
+				dispatch(setLoggedIn({ loggedIn: true }));
+			}
+		} else {
+			setError(false);
+		}
+	};
 
 	return (
 		<>
@@ -16,10 +32,10 @@ const Login = () => {
 						style={{ width: "90%", gap: "4px" }}
 					>
 						<p style={{ fontWeight: 700 }}>Username</p>
-						<div class="input-group d-flex">
+						<div className="input-group d-flex">
 							<input
 								type="text"
-								class="form-control"
+								className="form-control"
 								aria-label="Sizing example input"
 								aria-describedby="inputGroup-sizing-sm"
 								onChange={(e) => {
@@ -35,10 +51,10 @@ const Login = () => {
 						style={{ width: "90%", gap: "4px" }}
 					>
 						<p style={{ fontWeight: 700 }}>Password</p>
-						<div class="input-group d-flex">
+						<div className="input-group d-flex">
 							<input
 								type="password"
-								class="form-control"
+								className="form-control"
 								aria-label="Sizing example input"
 								aria-describedby="inputGroup-sizing-sm"
 								onChange={(e) => {
@@ -47,7 +63,7 @@ const Login = () => {
 							/>
 						</div>
 					</div>
-					<button className="btn btn-submit" style={{ width: "50%", marginTop: "20px" }}>
+					<button className="btn btn-submit" style={{ width: "50%", marginTop: "20px" }} onClick={Login}>
 						Login
 					</button>
 				</div>

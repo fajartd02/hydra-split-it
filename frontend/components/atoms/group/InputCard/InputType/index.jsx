@@ -5,9 +5,9 @@ const InstitutionType = (props) => {
 				<div className="d-flex flex-row justify-content-between align-items-center">
 					<div className="d-flex flex-column" style={{ width: "90%", gap: "4px" }}>
 						<p style={{ fontWeight: 700 }}>Jenis Pembayaran</p>
-						<div class="input-group">
+						<div className="input-group">
 							<select
-								class="form-select"
+								className="form-select"
 								id="inputGroupSelect01"
 								onChange={(e) => {
 									props.change(e.target.value);
