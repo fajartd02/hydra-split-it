@@ -10,6 +10,16 @@ export interface UpdateWalletDTO {
     priority?: number;
 }
 
+export interface WalletId {
+    walletId: number;
+}
+
+export const walletIdScehma = joi.object<WalletId>({
+    walletId: joi.number()
+        .min(1)
+        .required()
+});
+
 export const createWalletSchema = joi.object<CreateWalletDTO>({
     address: joi.string()
         .min(5)
