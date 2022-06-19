@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
 					}}
 					className="d-flex flex-column"
 				>
-					<div className="pt-4 px-4" style={{ marginBottom: "100px" }}>
+					<div className="pt-4 px-4" style={{ marginBottom: "110px" }}>
 						<main>{children}</main>
 					</div>
 					<Footer />
