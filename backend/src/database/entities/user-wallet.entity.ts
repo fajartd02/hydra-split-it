@@ -10,8 +10,8 @@ import {
 } from 'typeorm';
 
 @Entity('users_wallets')
-@Unique(['user_id', 'priority'])
-@Unique(['address'])
+@Unique('UNIQUE_USER', ['userId', 'priority'])
+@Unique('UNIQUE_ADDRESS', ['address'])
 export class UserWallet extends BaseEntity {
 
     @PrimaryColumn({ name: 'user_id' })
@@ -31,7 +31,7 @@ export class UserWallet extends BaseEntity {
     @Column({ length: 64 })
     address!: string;
 
-    @Column({ default: 0 })
+    @Column()
     balance!: number;
 
     @Column()

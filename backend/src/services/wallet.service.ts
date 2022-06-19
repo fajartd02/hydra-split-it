@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Wallet } from '../database/entities/wallet.entity';
 import { ResponseError } from '../utils/api.util';
 import { UserWallet } from '../database/entities/user-wallet.entity';
-import { MoreThanOrEqual, Not } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Not } from 'typeorm';
 
 import type {
     CreateWalletDTO,
@@ -68,28 +68,56 @@ class WalletService {
         }
 
         userWallet.balance = dto.balance ?? userWallet.balance;
+        let list: UserWallet[];
+
         if (dto.priority) {
-            userWallet.priority = dto.priority;
+            const currPriority = userWallet.priority;
+            userWallet.priority = 0;
+            const targetPriority = dto.priority;
+            if (targetPriority < currPriority) {
+                list = await UserWallet.findBy({
+                    userId,
+                    priority: MoreThanOrEqual(targetPriority)
+                });
 
-            const list = await UserWallet.findBy({
-                userId: Not(userId),
-                walletId: Not(walletId),
-                priority: MoreThanOrEqual(dto.priority)
-            });
-
-            const haveSamePriority = list.find((uw) =>
-                uw.priority === dto.priority);
-
-            // if there's the same priority,
-            // we'll be increasing the priority of all of the fetched data
-            // thus creating the effect of sorting them.
-            if (haveSamePriority) {
-                for (const tmp of list) {
-                    tmp.priority++;
+                let pivot = 0;
+                for (let i = 0; i < list.length; i++) {
+                    if (list[i].priority === currPriority) {
+                        pivot = i;
+                        break;
+                    }
                 }
 
-                await UserWallet.save(list);
+                for (let i = pivot - 1; i >= 0; i--) {
+                    list[i].priority++;
+                }
+                list[pivot].priority = targetPriority;
+            } else {
+                list = await UserWallet.findBy({
+                    userId,
+                    priority: LessThanOrEqual(targetPriority)
+                });
+
+                console.log(list);
+
+                let pivot = 0;
+                for (let i = 0; i < list.length; i++) {
+                    if (list[i].priority === currPriority) {
+                        pivot = i;
+                        break;
+                    }
+                }
+
+                for (let i = pivot + 1; i <= list.length - 1 ; i++) {
+                    list[i].priority--;
+                }
+                list[pivot].priority = targetPriority;
             }
+
+            console.log(list);
+            await userWallet.save();
+            userWallet.priority = targetPriority;
+            await UserWallet.save(list);
         }
 
         await userWallet.save();

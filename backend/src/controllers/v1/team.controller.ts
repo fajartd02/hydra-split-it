@@ -6,6 +6,7 @@ import { teamService } from '../../services/team.service';
 import { StatusCodes } from 'http-status-codes';
 import { validate } from '../../utils/validate.util';
 import { teamIdDto, updateTeamDto } from '../../validations/team.validation';
+import { paySchema } from '../../validations/wallet.validation';
 
 import {
     Controller,
@@ -62,6 +63,15 @@ export class TeamController {
         return sendResponse(res, {
             message: 'Successfully updated team user'
         });
+    }
+
+    @ReqHandler('POST', '/:teamId/pay')
+    async sendPayment(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const { teamId } = validate(req, teamIdDto, 'params');
+        const dto = validate(req, paySchema, 'body');
+
+        await teamService.sendPayment(userId, teamId, dto);
     }
 
 }

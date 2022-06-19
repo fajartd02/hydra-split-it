@@ -3,7 +3,7 @@ import { UserWallet } from '../database/entities/user-wallet.entity';
 import { User } from '../database/entities/user.entity';
 import { Errors, ResponseError } from '../utils/api.util';
 
-import type { SoloPayDTO } from '../validations/wallet.validation';
+import type { PaymentDTO } from '../validations/wallet.validation';
 
 const NotEnoughMoney = new ResponseError(
     "You don't have enough money to pay the bill!",
@@ -17,6 +17,10 @@ const WalletAddressNotFound = new ResponseError(
 
 class UserService {
 
+    async getAll() {
+        return User.find();
+    }
+
     async get(id: string) {
         const user = await User.findOneBy({ id });
         if (!user) {
@@ -26,7 +30,7 @@ class UserService {
         return user;
     }
 
-    async sendPayment(userId: string, { walletAddress, bill }: SoloPayDTO) {
+    async sendPayment(userId: string, { walletAddress, bill }: PaymentDTO) {
         const wallets = await UserWallet.find({
             where: { userId },
             order: { priority: 'ASC' }
@@ -40,18 +44,21 @@ class UserService {
         }
 
         const originalBill = bill;
-        for (const wallet of wallets) {
+        for (const curr of wallets) {
             if (bill <= 0) {
                 break;
             }
 
-            let taken = wallet.balance;
-            if (wallet.balance >= bill) {
-                taken = wallet.balance - bill;
+            let taken;
+            if (curr.balance < bill) {
+                taken = curr.balance;
+                curr.balance = 0;
+            } else {
+                taken = curr.balance - bill;
+                curr.balance = taken;
             }
 
             bill -= taken;
-            wallet.balance = taken;
         }
 
         if (bill > 0) {
@@ -60,8 +67,8 @@ class UserService {
 
         targetWallet.balance += originalBill;
 
-        await targetWallet.save();
         await UserWallet.save(wallets);
+        await targetWallet.save();
     }
 
 }

@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { sendResponse } from '../../utils/api.util';
 import { userService } from '../../services/user.service';
 import { validate } from '../../utils/validate.util';
-import { soloPaySchema } from '../../validations/wallet.validation';
+import { paySchema } from '../../validations/wallet.validation';
 
 import {
     Controller,
@@ -13,6 +13,17 @@ import {
 
 @Controller({ path: 'users', middlewares: [authenticate()] })
 export class UserController {
+
+    @ReqHandler('GET', '/')
+    async getAll(_: Request, res: Response) {
+        const users = await userService.getAll();
+        return sendResponse(res, {
+            message: 'OK',
+            data: {
+                users
+            }
+        });
+    }
 
     @ReqHandler('GET', '/profile')
     async profile(req: Request, res: Response) {
@@ -28,7 +39,7 @@ export class UserController {
     @ReqHandler('POST', '/pay')
     async sendPayment(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
-        const dto = validate(req, soloPaySchema, 'body');
+        const dto = validate(req, paySchema, 'body');
 
         await userService.sendPayment(userId, dto);
 

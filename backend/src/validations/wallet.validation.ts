@@ -10,14 +10,24 @@ export interface UpdateWalletDTO {
     priority?: number;
 }
 
-export interface SoloPayDTO {
+export interface WalletId {
+    walletId: number;
+}
+
+export const walletIdScehma = joi.object<WalletId>({
+    walletId: joi.number()
+        .min(1)
+        .required()
+});
+
+export interface PaymentDTO {
     walletAddress: string;
     bill: number;
 }
 
 export const createWalletSchema = joi.object<CreateWalletDTO>({
     address: joi.string()
-        .min(5)
+        .min(1)
         .max(64)
         .required(),
     balance: joi.number()
@@ -34,9 +44,9 @@ export const updateWalletSchema = joi.object<UpdateWalletDTO>({
         .optional()
 });
 
-export const soloPaySchema = joi.object<SoloPayDTO>({
+export const paySchema = joi.object<PaymentDTO>({
     walletAddress: joi.string()
-        .min(5)
+        .min(1)
         .required(),
     bill: joi.number()
         .min(1_000)
