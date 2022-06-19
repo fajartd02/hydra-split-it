@@ -27,6 +27,9 @@ export class UserWallet extends BaseEntity {
     @JoinColumn({ name: 'wallet_id' })
     wallet!: Wallet;
 
+    @Column({ length: 64 })
+    address!: string;
+
     @Column({ default: 0 })
     balance!: number;
 
