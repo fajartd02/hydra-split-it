@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { sendResponse } from '../../utils/api.util';
 import { userService } from '../../services/user.service';
 import { validate } from '../../utils/validate.util';
-import { soloPaySchema } from '../../validations/wallet.validation';
+import { paySchema } from '../../validations/wallet.validation';
 
 import {
     Controller,
@@ -28,7 +28,7 @@ export class UserController {
     @ReqHandler('POST', '/pay')
     async sendPayment(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
-        const dto = validate(req, soloPaySchema, 'body');
+        const dto = validate(req, paySchema, 'body');
 
         await userService.sendPayment(userId, dto);
 

@@ -10,7 +10,7 @@ export interface UpdateWalletDTO {
     priority?: number;
 }
 
-export interface SoloPayDTO {
+export interface PaymentDTO {
     walletAddress: string;
     bill: number;
 }
@@ -34,7 +34,7 @@ export const updateWalletSchema = joi.object<UpdateWalletDTO>({
         .optional()
 });
 
-export const soloPaySchema = joi.object<SoloPayDTO>({
+export const paySchema = joi.object<PaymentDTO>({
     walletAddress: joi.string()
         .min(5)
         .required(),

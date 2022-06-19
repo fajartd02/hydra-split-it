@@ -3,8 +3,11 @@ import { Team } from '../database/entities/team.entity';
 import { TeamUser } from '../database/entities/teams-users.entity';
 import { ResponseError } from '../utils/api.util';
 import { userService } from './user.service';
+import { UserWallet } from '../database/entities/user-wallet.entity';
+import { TeamStatus } from '../validations/team.validation';
 
 import type { TeamUpdateDTO } from '../validations/team.validation';
+import type { PaymentDTO } from '../validations/wallet.validation';
 
 const TeamNotFound = new ResponseError(
     'Cannot find team',
@@ -19,6 +22,16 @@ const UserAlreadyJoin = new ResponseError(
 const UserNotJoinTeam = new ResponseError(
     'User haven\'t joined the team',
     StatusCodes.BAD_REQUEST
+);
+
+const WalletAddressNotFound = new ResponseError(
+    'Cannot find this wallet address',
+    StatusCodes.NOT_FOUND
+);
+
+const NotEnoughMoney = new ResponseError(
+    "Team doesn't have enough money to pay the bill!",
+    StatusCodes.FORBIDDEN
 );
 
 class TeamService {
@@ -43,11 +56,12 @@ class TeamService {
         }
 
         const foundUser = teamUsers.map((tu) => tu.user);
-        if (!foundUser) {
+        const team = await Team.findOneBy({ id: teamId });
+
+        if (!team || !foundUser) {
             throw TeamNotFound;
         }
 
-        const team = await Team.findOneBy({ id: teamId });
         return team;
     }
 
@@ -83,6 +97,38 @@ class TeamService {
         await teamUser.save();
 
         return this.get(userId, teamId);
+    }
+
+    async sendPayment(userId: string, teamId: number, dto: PaymentDTO) {
+        const targetWallet = await UserWallet.findOneBy({
+            address: dto.walletAddress
+        });
+
+        if (!targetWallet) {
+            throw WalletAddressNotFound;
+        }
+
+        const members = await TeamUser.findBy({ teamId });
+        const totalMoney = members
+            .map((member) => member.collabMoney)
+            .reduce((prev, curr) => prev + curr, 0);
+
+        if (totalMoney < dto.bill) {
+            throw NotEnoughMoney;
+        }
+
+        const payments: Promise<void>[] = [];
+        for (const member of members) {
+            const res = userService.sendPayment(member.userId, dto);
+            payments.push(res);
+        }
+
+        await Promise.all(payments);
+
+        const team = await this.get(userId, teamId);
+        team.status = TeamStatus.COMPLETE;
+
+        await team.save();
     }
 
 }

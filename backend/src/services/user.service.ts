@@ -3,7 +3,7 @@ import { UserWallet } from '../database/entities/user-wallet.entity';
 import { User } from '../database/entities/user.entity';
 import { Errors, ResponseError } from '../utils/api.util';
 
-import type { SoloPayDTO } from '../validations/wallet.validation';
+import type { PaymentDTO } from '../validations/wallet.validation';
 
 const NotEnoughMoney = new ResponseError(
     "You don't have enough money to pay the bill!",
@@ -26,7 +26,7 @@ class UserService {
         return user;
     }
 
-    async sendPayment(userId: string, { walletAddress, bill }: SoloPayDTO) {
+    async sendPayment(userId: string, { walletAddress, bill }: PaymentDTO) {
         const wallets = await UserWallet.find({
             where: { userId },
             order: { priority: 'ASC' }
